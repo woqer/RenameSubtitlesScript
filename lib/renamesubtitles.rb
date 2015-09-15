@@ -3,7 +3,9 @@
 
 require "pp"
 
-module FileManagerHelper extend self
+module FileManagerHelper
+  extend self
+  
   def listdirectory
     Dir["*"]
   end
@@ -95,7 +97,7 @@ class VideoElement
   end
 end
 
-VideoFileClass = Class.new{extend VideoFile}
+VideoFileClass = Class.new { extend VideoFile }
 
 def process(line)
   VideoFileClass.identify_file line
