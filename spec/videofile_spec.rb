@@ -1,5 +1,4 @@
 require 'spec_helper'
-require "pry"
 
 describe VideoFile do
 
@@ -9,7 +8,6 @@ describe VideoFile do
   describe "#video_extensions" do
     context "when calling method" do
       it "returns array of video extensions" do
-        # binding.pry
         expect(videofile.video_extensions).to eq ["mkv", "avi", "mp4"]
       end
     end
@@ -20,6 +18,15 @@ describe VideoFile do
       it "returns array of patterns" do
         extensions = videofile.video_extensions
         expect(videofile.file_pattern extensions).to eq [/\.mkv$/,/\.avi$/,/\.mp4$/]
+      end
+    end
+  end
+
+  describe "#try_match" do
+    context "when iterations overflow" do
+      it "returns default RecursivePattern" do
+        value = videofile.try_match("adsf", ["qwer"], 1)
+        expect(value).to eq RecursivePattern.new
       end
     end
   end

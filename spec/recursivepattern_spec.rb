@@ -46,4 +46,20 @@ describe RecursivePattern do
       end
     end
   end
+
+  describe "#==" do
+    context "when equal contents" do
+      it "returns true" do
+        response = (rp_happy == RecursivePattern.new(guess: "Lost.S01E01.720p.BluRay.x264-CtrlHD.srt", iteration: 1))
+        expect(response).to eq true
+      end
+    end
+
+    context "when different contents" do
+      it "returns false" do
+        response = (rp_happy == RecursivePattern.new)
+        expect(response).to eq false
+      end
+    end
+  end
 end

@@ -5,7 +5,7 @@ require "pp"
 
 module FileManagerHelper
   extend self
-  
+
   def listdirectory
     Dir["*"]
   end
@@ -20,6 +20,10 @@ class RecursivePattern
   def initialize(args={})
     @guess = args[:guess] || ""
     @iteration = args[:iteration] || 0
+  end
+
+  def ==(obj)
+    guess == obj.guess && iteration == obj.iteration
   end
 end
 
