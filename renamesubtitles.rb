@@ -3,7 +3,7 @@
 
 require "pp"
 
-class FileManager extend self
+module FileManagerHelper extend self
   def listdirectory
     Dir["*"]
   end
@@ -104,7 +104,7 @@ end
 
 # List directory and downcase extension of files
 extension_pattern = VideoFileClass.file_pattern([/(\w|\d)*/]).first
-files = FileManager.listdirectory.map do |entry|
+files = FileManagerHelper.listdirectory.map do |entry|
   extension = entry[extension_pattern]
   if extension.nil?
     nil
