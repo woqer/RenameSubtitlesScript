@@ -101,27 +101,28 @@ def process(line)
   VideoFileClass.identify_file line
 end
 
-
-# List directory and downcase extension of files
-extension_pattern = VideoFileClass.file_pattern([/(\w|\d)*/]).first
-files = FileManagerHelper.listdirectory.map do |entry|
-  extension = entry[extension_pattern]
-  if extension.nil?
-    nil
-  else
-    entry.gsub(extension, extension.downcase)
+def main_method
+  # List directory and downcase extension of files
+  extension_pattern = VideoFileClass.file_pattern([/(\w|\d)*/]).first
+  files = FileManagerHelper.listdirectory.map do |entry|
+    extension = entry[extension_pattern]
+    if extension.nil?
+      nil
+    else
+      entry.gsub(extension, extension.downcase)
+    end
   end
-end
 
-files.compact!
+  files.compact!
 
-# MAIN loop
-input = {subtitle: [], video: []}
-files.each do |file|
-  key, value = process file
-  if !key.eql? :other
-    input[key] << VideoElement.new(value.gsub("\n",""))
+  # MAIN loop
+  input = {subtitle: [], video: []}
+  files.each do |file|
+    key, value = process file
+    if !key.eql? :other
+      input[key] << VideoElement.new(value.gsub("\n",""))
+    end
   end
-end
 
-pp input
+  input
+end
