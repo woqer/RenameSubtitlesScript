@@ -3,6 +3,16 @@
 
 require "pp"
 
+class FileManager extend self
+  def listdirectory
+    Dir["*"]
+  end
+
+  def rename(origin, destiny)
+    File.rename(origin, destiny)
+  end
+end
+
 class RecursivePattern
   attr_reader :guess, :iteration
   def initialize(args={})
@@ -94,7 +104,7 @@ end
 
 # List directory and downcase extension of files
 extension_pattern = VideoFileClass.file_pattern([/(\w|\d)*/]).first
-files = Dir["*"].map do |entry|
+files = FileManager.listdirectory.map do |entry|
   extension = entry[extension_pattern]
   if extension.nil?
     nil
