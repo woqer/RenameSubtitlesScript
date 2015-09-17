@@ -67,7 +67,5 @@ describe VideoElement do
         expect(videoelement==other).to eq false
       end
     end
-
   end
-
 end
