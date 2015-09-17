@@ -1,16 +1,30 @@
 require 'spec_helper'
+require 'fileutils'
 
 describe FileManagerHelper do
-  let(:original_filename) { "prueba-renombrado.orig" }
+  original_filename = "prueba-renombrado.orig"
 
-  Dir.chdir("tmp")
-  File.new("prueba-renombrado.orig", "w+")
+  project_path = FileUtils.pwd
+
+  before :all do
+    FileUtils.mkdir_p("tmp")
+    FileUtils.cd("tmp")
+    FileUtils.touch(original_filename)
+    current_path = FileUtils.pwd
+    puts "\n[FileManagerHelper Tests] before all --> [#{current_path}]\n"
+  end
+
+  after :all do
+    FileUtils.cd(project_path)
+    FileUtils.rm Dir.glob("tmp/*")
+    current_path = FileUtils.pwd
+    puts "\n[FileManagerHelper Tests] after all --> [#{current_path}]\n"
+  end
 
   describe "::listdirectory" do
     it "lists contents of current directory" do
       expect(FileManagerHelper.listdirectory).to eq ([original_filename])
     end
-
   end
 
   describe "::rename" do
