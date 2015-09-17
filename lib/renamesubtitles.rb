@@ -2,6 +2,7 @@
 #encoding: utf-8
 
 require "pp"
+require "pry"
 
 module FileManagerHelper
   extend self
@@ -22,8 +23,8 @@ class RecursivePattern
     @iteration = args[:iteration] || 0
   end
 
-  def ==(obj)
-    guess == obj.guess && iteration == obj.iteration
+  def ==(other)
+    guess == other.guess && iteration == other.iteration
   end
 end
 
@@ -103,18 +104,23 @@ class VideoElement
   def not_an_episode?
     episode.nil?
   end
+
+  def ==(other)
+    episode == other.episode && name == other.name
+  end
 end
 
-VideoFileClass = Class.new { extend VideoFile }
 
 def process(line)
   VideoFileClass.identify_file line
 end
 
-def main_method
-  # List directory and downcase extension of files
-  extension_pattern = VideoFileClass.file_pattern([/(\w|\d)*/]).first
-  files = FileManagerHelper.listdirectory.map do |entry|
+def extension_pattern
+  VideoFileClass.file_pattern(["(\\w|\\d)*"]).first
+end
+
+def prepare_files
+  FileManagerHelper.listdirectory.map do |entry|
     extension = entry[extension_pattern]
     if extension.nil?
       nil
@@ -122,10 +128,9 @@ def main_method
       entry.gsub(extension, extension.downcase)
     end
   end
+end
 
-  files.compact!
-
-  # MAIN loop
+def organize_files(files)
   input = {subtitle: [], video: []}
   files.each do |file|
     key, value = process file
@@ -136,3 +141,9 @@ def main_method
 
   input
 end
+
+VideoFileClass = Class.new { extend VideoFile }
+
+# files = prepare_files
+
+# pp organize_files(files.compact)

@@ -46,4 +46,28 @@ describe VideoElement do
     end
   end
 
+  describe "#==" do
+    context "when given same videoelement" do
+      it "returns true" do
+        other = VideoElement.new("Episode 1.mp4")
+        expect(videoelement==other).to eq true
+      end
+    end
+
+    context "when given different videoelement (episode)" do
+      it "returns true" do
+        other = VideoElement.new("Episode 2.mp4")
+        expect(videoelement==other).to eq false
+      end
+    end
+
+    context "when given different videoelement (name)" do
+      it "returns true" do
+        other = VideoElement.new("Episode 1.srt")
+        expect(videoelement==other).to eq false
+      end
+    end
+
+  end
+
 end
