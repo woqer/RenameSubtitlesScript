@@ -129,4 +129,57 @@ describe VideoFile do
     end
   end
 
+  describe "#get_episode_number" do
+    context "when provided filename (Episode 1 - blabla)" do
+      it "returns the episode number 1 (integer)" do
+        value = videofile.get_episode_number("Episode 1 - blabla")
+        expect(value).to eq 1
+      end
+    end
+    
+    context "when provided filename (blabla S01E01)" do
+      it "returns the episode number 1 (integer)" do
+        value = videofile.get_episode_number("blabla S01E01")
+        expect(value).to eq 1
+      end
+    end
+    
+    context "when provided filename (blabla 1x01)" do
+      it "returns the episode number 1 (integer)" do
+        value = videofile.get_episode_number("blabla 1x01")
+        expect(value).to eq 1
+      end
+    end
+    
+    context "when provided invalid filename" do
+      it "returns nil" do
+        value = videofile.get_episode_number("asdf")
+        expect(value).to eq nil
+      end
+    end
+  end
+
+  describe "#identify_file" do
+    context "when provided video filename" do
+      it "returns :video and name" do
+        value = videofile.identify_file("blabla S01E01.avi")
+        expect(value).to eq [:video, "blabla S01E01.avi"]
+      end
+    end
+
+    context "when provided subtitle filename" do
+      it "returns :subtitle and name" do
+        value = videofile.identify_file("blabla S01E01.sub")
+        expect(value).to eq [:subtitle, "blabla S01E01.sub"]
+      end
+    end
+
+    context "when provided invalid filename" do
+      it "returns :other and name" do
+        value = videofile.identify_file("adsfadslkjeqr.mp3")
+        expect(value).to eq [:other, "adsfadslkjeqr.mp3"]
+      end
+    end
+  end
+
 end
