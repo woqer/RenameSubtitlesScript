@@ -53,6 +53,80 @@ describe VideoFile do
         expect(value).to eq RecursivePattern.new
       end
     end
+
+    context "when provided a video name and video pattern" do
+      it "returns the guessed video extension" do
+        pattern = videofile.file_pattern(videofile.video_extensions)
+        value = videofile.try_match("adsfEpisode1.mkv", pattern, 0)
+        expect(value.guess).to eq ".mkv"
+      end
+    end
+
+    context "when provided a subtitle name and subtitle pattern" do
+      it "returns the guessed subtitle extension" do
+        pattern = videofile.file_pattern(videofile.subtitle_extensions)
+        value = videofile.try_match("adsfEpisode1.srt", pattern, 0)
+        expect(value.guess).to eq ".srt"
+      end
+    end
+
+    context "when provided a video name and subtitle pattern" do
+      it "returns empty guess" do
+        pattern = videofile.file_pattern(videofile.subtitle_extensions)
+        value = videofile.try_match("adsfEpisode1.mkv", pattern, 0)
+        expect(value.guess).to eq ""
+      end
+    end
+
+    context "when provided a video_nameEpisode1 and episode_patterns_lvl1" do
+      it "returns a episode lvl2 guess" do
+        pattern = videofile.episode_patterns_lvl1
+        value = videofile.try_match("adsfEpisode1.mkv", pattern, 0)
+        expect(value.guess).to eq "adsfEpisode1"
+      end
+    end
+
+    context "when provided a video_nameS01E01 and episode_patterns_lvl1" do
+      it "returns a episode lvl2 guess" do
+        pattern = videofile.episode_patterns_lvl1
+        value = videofile.try_match("adsfS01E01.mkv", pattern, 0)
+        expect(value.guess).to eq "S01E01"
+      end
+    end
+
+    context "when provided a video_name1x01 and episode_patterns_lvl1" do
+      it "returns a episode lvl2 guess" do
+        pattern = videofile.episode_patterns_lvl1
+        value = videofile.try_match("adsf1x01.mkv", pattern, 0)
+        expect(value.guess).to eq "1x01"
+      end
+    end
+  end
+
+  describe "#get_second_lvl_guess" do
+    context "when provided a guessed lvl 2 (S01E01) and episode_patterns_lvl2" do
+      it "returns an episode guess" do
+        pattern = videofile.episode_patterns_lvl2
+        value = videofile.try_match("S01E01", pattern, 0)
+        expect(value.guess).to eq "E01"
+      end
+    end
+    
+    context "when provided a guessed lvl 2 (1x01) and episode_patterns_lvl2" do
+      it "returns an episode guess" do
+        pattern = videofile.episode_patterns_lvl2
+        value = videofile.try_match("1x01", pattern, 0)
+        expect(value.guess).to eq "x01"
+      end
+    end
+
+    context "when provided a guessed lvl 2 (adsfEpisode1) and episode_patterns_lvl2" do
+      it "returns an episode guess" do
+        pattern = videofile.episode_patterns_lvl2
+        value = videofile.try_match("adsfEpisode1", pattern, 0)
+        expect(value.guess).to eq "1"
+      end
+    end
   end
 
 end

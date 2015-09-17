@@ -60,9 +60,13 @@ module VideoFile
     end
   end
 
+  def get_second_lvl_guess(guess_response)
+    guess_response.guess[episode_patterns_lvl2[guess_response.iteration]]
+  end
+
   def get_episode_number(file_name)
     guess_response = try_match(file_name, episode_patterns_lvl1, 0)
-    guess2 = guess_response.guess[episode_patterns_lvl2[guess_response.iteration]]
+    guess2 = get_second_lvl_guess(guess_response)
     if guess2.nil?
       guess2
     else
