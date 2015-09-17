@@ -101,7 +101,7 @@ class VideoElement
   end
 
   def not_an_episode?
-    !episode.nil?
+    episode.nil?
   end
 end
 
