@@ -80,21 +80,32 @@ module VideoFile
 
     if video_name_response.guess.eql? ""
       subtitle_name_response = try_match name, file_pattern(subtitle_extensions), 0
-      return :other, name if subtitle_name_response.guess.eql? ""
-      return :subtitle, name
+      return :other  if subtitle_name_response.guess.eql? ""
+      return :subtitle
     else
-      return :video, name
+      return :video
     end
   end
 end
 
 class VideoElement
   include VideoFile
-  attr_reader :episode, :name
+  attr_reader :episode, :name, :type, :extension, :new_name
 
   def initialize(name)
+    @extension = File.extname(name)
     @episode = episode_initializer name
-    @name = name
+    @name = name_initializer name
+    @type = type_initializer name
+    @new_name = nil
+  end
+
+  def name_initializer(name)
+    File.basename(name, extension)
+  end
+
+  def type_initializer(name)
+    identify_file name
   end
 
   def episode_initializer(name)
@@ -106,14 +117,29 @@ class VideoElement
   end
 
   def ==(other)
-    episode == other.episode && name == other.name
+    episode == other.episode && name == other.name && type == other.type
+  end
+
+  def same_episode?(other)
+    episode == other.episode
+  end
+
+  def save_new_name!(other)
+    @new_name = other.name
+  end
+
+  def get_filename
+    "#{name}#{extension}"
+  end
+
+  def get_rename_filename
+    "#{new_name}#{extension}"
   end
 end
 
-
-def process(line)
-  VideoFileClass.identify_file line
-end
+# def process(line)
+#   VideoFileClass.identify_file line
+# end
 
 def extension_pattern
   VideoFileClass.file_pattern(["(\\w|\\d)*"]).first
@@ -131,19 +157,34 @@ def prepare_files
 end
 
 def organize_files(files)
-  input = {subtitle: [], video: []}
+  input = {subtitle: [], video: [], other: []}
   files.each do |file|
-    key, value = process file
-    if !key.eql? :other
-      input[key] << VideoElement.new(value.gsub("\n",""))
-    end
+    ve = VideoElement.new(file.gsub("\n", ""))
+    input[ve.type] << ve
   end
 
   input
 end
 
+def subs_to_video_map(elements)
+  elements[:subtitle].reduce({}) do |mem, subtitle|
+    matching_video = elements[:video].find { |video| video.same_episode?(subtitle) }
+    mem[subtitle] = matching_video
+    mem
+  end
+end
+
+def rename_subtitles(elements)
+  subs_to_video_map(elements).each do |sub, video|
+    sub.save_new_name! video
+    FileManagerHelper.rename(sub.get_filename, sub.get_rename_filename)
+  end
+end
+
 VideoFileClass = Class.new { extend VideoFile }
 
-# files = prepare_files
+files = prepare_files
 
-# pp organize_files(files.compact)
+elements = organize_files(files.compact)
+
+rename_subtitles(elements)

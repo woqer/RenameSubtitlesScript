@@ -163,21 +163,21 @@ describe VideoFile do
     context "when provided video filename" do
       it "returns :video and name" do
         value = videofile.identify_file("blabla S01E01.avi")
-        expect(value).to eq [:video, "blabla S01E01.avi"]
+        expect(value).to eq :video
       end
     end
 
     context "when provided subtitle filename" do
       it "returns :subtitle and name" do
         value = videofile.identify_file("blabla S01E01.sub")
-        expect(value).to eq [:subtitle, "blabla S01E01.sub"]
+        expect(value).to eq :subtitle
       end
     end
 
     context "when provided invalid filename" do
       it "returns :other and name" do
         value = videofile.identify_file("adsfadslkjeqr.mp3")
-        expect(value).to eq [:other, "adsfadslkjeqr.mp3"]
+        expect(value).to eq :other
       end
     end
   end
