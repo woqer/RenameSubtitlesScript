@@ -5,7 +5,7 @@ Ruby Script for renaming subtitles in a folder. It identifies the video files an
 # How To
 
 This script only works in Unix-like systems. **Ruby must be installed on the system**.
-Just download the script `lib/renamesubtitles.rb` and execute it in the desired folder.
+Just download the script [`lib/renamesubtitles.rb`](https://github.com/woqer/RenameSubtitlesScript/blob/master/lib/renamesubtitles.rb) and execute it in the desired folder.
 You can copy it to `/usr/bin` if you want it to be accessible globally.
 
 * The folder must contain the video files and the subtitles files
