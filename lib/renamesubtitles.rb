@@ -137,10 +137,6 @@ class VideoElement
   end
 end
 
-# def process(line)
-#   VideoFileClass.identify_file line
-# end
-
 def extension_pattern
   VideoFileClass.file_pattern(["(\\w|\\d)*"]).first
 end
@@ -169,7 +165,9 @@ end
 def subs_to_video_map(elements)
   elements[:subtitle].reduce({}) do |mem, subtitle|
     matching_video = elements[:video].find { |video| video.same_episode?(subtitle) }
-    mem[subtitle] = matching_video
+    if !matching_video.nil?
+      mem[subtitle] = matching_video
+    end
     mem
   end
 end
@@ -186,5 +184,7 @@ VideoFileClass = Class.new { extend VideoFile }
 files = prepare_files
 
 elements = organize_files(files.compact)
+
+# binding.pry
 
 rename_subtitles(elements)

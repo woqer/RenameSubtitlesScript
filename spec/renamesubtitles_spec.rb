@@ -46,7 +46,7 @@ describe "#subs_to_video_map" do
       video = VideoElement.new("Episode 10 - Raised by Another.mkv")
       elements = {
         subtitle: [
-          subtitle
+          subtitle, VideoElement.new("S01E01 - adf.srt")
         ],
         video: [
           video
