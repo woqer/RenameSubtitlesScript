@@ -2,7 +2,6 @@
 #encoding: utf-8
 
 require "pp"
-require "pry"
 
 module FileManagerHelper
   extend self
@@ -42,11 +41,11 @@ module VideoFile
   end
 
   def video_extensions
-    ["mkv", "avi", "mp4"]
+    ["mkv", "avi", "mp4", "flv", "vob", "ogv", "ogg", "gifv", "mov", "wmv", "rm", "rmvb", "asf", "m4v", "mpg", "mpeg", "mp2", "mpv", "mpe", "m2v", "3gp"]
   end
 
   def subtitle_extensions
-    ["srt", "sub"]
+    ["srt", "sub", "sbv", "ttxt", "smi", "stl", "ass", "ssa", "usf", "idx"]
   end
 
   def try_match(name, pattern_array, iteration)
@@ -184,7 +183,5 @@ VideoFileClass = Class.new { extend VideoFile }
 files = prepare_files
 
 elements = organize_files(files.compact)
-
-# binding.pry
 
 rename_subtitles(elements)
